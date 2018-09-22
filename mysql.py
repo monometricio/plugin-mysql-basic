@@ -89,6 +89,14 @@ def shouldIncludeMetric(name):
         return True
     return False
 
+def cloneCertainKeys(name, value):
+    """
+    For some keys we want a total and a rate. Print the rate here,
+    while the total version will be printed the "normal" way
+    """
+    if name in ['connections', 'aborted_clients', 'aborted_connections']:
+        print "_counter.mysql.rate.%s: %s" % (keyname, value)
+
 def getPerformanceData():
     c.execute('''
 SELECT schema_name, ROUND((SUM(sum_timer_wait)/ SUM(count_star)) / 1000000) AS avg_micros
@@ -117,6 +125,8 @@ for row in c.fetchall():
 
     if not shouldIncludeMetric(keyname):
         continue
+
+    cloneCertainKeys(keyname, row[1])
 
     if keyname in METRIC_NAME_MAP:
         keyname = METRIC_NAME_MAP[keyname]
