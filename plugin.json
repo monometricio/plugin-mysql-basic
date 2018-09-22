@@ -1,0 +1,4 @@
+{
+    "executable" : "mysql.py",
+    "description" : "mysql / mariadb plugin"
+}
